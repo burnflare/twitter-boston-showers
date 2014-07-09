@@ -1,0 +1,11 @@
+# Uncomment this line to define a global platform for your project
+
+target "TwitterBostonShower" do
+  platform :ios, "7.0"
+  pod 'MZFayeClient', '~> 1.0.0'
+end
+
+target "TwitterBostonShowerTests" do
+
+end
+

@@ -1,0 +1,176 @@
+<html>
+<head>
+<title>Yo. for the shower.</title>
+</head>
+<link rel="shortcut icon" href="https://yoapp.s3.amazonaws.com/yo/favicon.ico" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<style type="text/css">
+    body {
+      background: #55acee;
+	  font-family: 'Open Sans', sans-serif;
+	  font-size: 200px;
+      font-weight: 700;
+      color: white;
+      text-align: center; 
+      text-rendering: optimizeLegibility;
+    }
+    h2 {
+      background: #55acee;
+	  font-family: 'Open Sans', sans-serif;
+	  font-size: 30px;
+      color: white;
+      text-align: center;
+      text-rendering: optimizeLegibility;
+    }
+    footer {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 400;
+      height:50px;
+      bottom:0px;
+      left:0px;
+      right:0px;
+      margin-bottom:10%;
+      font-size : 14px; 
+      text-align : center; 
+      color: white;
+      padding: 1% 0;
+      text-rendering: optimizeLegibility;
+  	}
+	#parent-box {
+		display: flex;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		justify-content: center;
+		-webkit-justify-content: center;
+	}
+	#left-box, #right-box {
+		display: flex;
+		display: -webkit-flex;
+		justify-content: center;
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		
+		width: 300px;
+		height: 300px;
+		border: 5px solid white;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	div.timer {
+		font-size: 90;
+		margin: auto;
+	}
+	div.title {
+		font-size: 30;
+		margin-top:10;
+	}
+	
+	a:link {color:white;}      /* unvisited link */
+	a:visited {color:white;}  /* visited link */
+	a:hover {color:white;}  /* mouse over link */
+	a:active {color:white;}  /* selected link */
+</style>
+<body>
+Yo.<br>
+<h2> for @TwitterBoston L6 showers.<h2>
+	<div id="parent-box">
+		<div id="left-box">
+			<div class="title">#shower 613</div>
+			<div class="timer" id="left-timer">00:00</div>
+		</div>
+		<div id="right-box">
+			<div class="title">#shower 612</div>
+			<div class="timer" id="right-timer">00:00</div>
+		</div>
+	</div>
+<footer>
+<a class="footer" target="_blank" href="http://twitter.com/burnflare">@burnflare</a> | <a class="footer" target="_blank" href="https://github.com/burnflare/twitter-boston-showers">Contribute</a> |  $1,000,000 VC funding pending<br><br><br>
+</footer>
+</body>
+<audio src="flush.mp3" id="flush">
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="/faye/client.js"></script>
+<script type="text/javascript">
+
+var leftBox;
+var rightBox;
+var client = new Faye.Client('/faye');
+var audio = document.createElement("audio");
+audio.src = "flush.mp3";
+
+client.subscribe('/showers', function(message) {
+	var left = message.left;
+	var right = message.right;
+	var time = Math.floor(new Date() / 1000);
+	
+	// Let's detect if there's a change
+	var lastLeft = left[left.length - 1];
+	var lastRight = right[right.length - 1];
+	
+	if (leftBox != lastLeft.status) {
+		leftBox = lastLeft.status;
+		setBox("left", left);
+		startLeft(lastLeft.time);
+	}
+	if(rightBox != lastRight.status) {
+		rightBox = lastRight.status;
+		setBox("right", right);
+		startRight(lastRight.time);
+	}
+});
+
+function setBox(box, arr) {
+	var last = arr[arr.length - 1];
+	
+	if (last.status == "unlock") {
+		$("#"+box+"-box").css( "background-color", "green" );
+	} else if (last.status == "lock") {
+		$("#"+box+"-box").css( "background-color", "red" );
+	}
+}
+
+var leftCounter;
+function startLeft(boxTime) {
+	var count = Math.floor(new Date() / 1000) - boxTime;
+	
+	function left() {
+		var minutes = Math.floor(count / 60);
+		var seconds = normalize(count - (minutes * 60));
+		("0" + seconds).slice(-2);
+		var stopwatch = minutes + ":" + seconds;
+		$("#left-timer").html( stopwatch )
+		
+		count++;
+	}
+	
+	clearInterval(leftCounter);
+	leftCounter = setInterval(function() {left()}, 1000);
+	left();
+}
+
+var rightCounter;
+function startRight(boxTime) {
+	var count = Math.floor(new Date() / 1000) - boxTime;
+	
+	function right() {
+		var minutes = Math.floor(count / 60);
+		var seconds = normalize(count - (minutes * 60));
+		("0" + seconds).slice(-2);
+		var stopwatch = minutes + ":" + seconds;
+		$("#right-timer").html( stopwatch )
+		
+		count++;
+	}
+	
+	clearInterval(rightCounter);
+	rightCounter = setInterval(function() {right()}, 1000);
+	right();
+}
+
+function normalize(n){
+    return n > 9 ? "" + n: "0" + n;
+}
+
+</script>
+</html>

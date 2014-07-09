@@ -1,0 +1,1 @@
+PODS_MZFAYECLIENT_OTHER_LDFLAGS = -framework QuartzCore
