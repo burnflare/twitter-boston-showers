@@ -3,6 +3,7 @@
 target "TwitterBostonShower" do
   platform :ios, "7.0"
   pod 'MZFayeClient', '~> 1.0.0'
+  pod 'TheAmazingAudioEngine'
 end
 
 target "TwitterBostonShowerTests" do

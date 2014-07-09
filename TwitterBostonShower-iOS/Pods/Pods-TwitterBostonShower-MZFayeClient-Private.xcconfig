@@ -1,5 +1,5 @@
 #include "Pods-TwitterBostonShower-MZFayeClient.xcconfig"
 GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/MZFayeClient" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/Base64" "${PODS_ROOT}/Headers/MZFayeClient" "${PODS_ROOT}/Headers/SocketRocket"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/MZFayeClient" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/Base64" "${PODS_ROOT}/Headers/MZFayeClient" "${PODS_ROOT}/Headers/SocketRocket" "${PODS_ROOT}/Headers/TheAmazingAudioEngine"
 OTHER_LDFLAGS = -ObjC ${PODS_TWITTERBOSTONSHOWER_MZFAYECLIENT_OTHER_LDFLAGS}
 PODS_ROOT = ${SRCROOT}

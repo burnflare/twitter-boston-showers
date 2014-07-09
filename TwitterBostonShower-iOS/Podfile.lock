@@ -4,13 +4,16 @@ PODS:
     - Base64 (~> 1.0.1)
     - SocketRocket (~> 0.3.1-beta2)
   - SocketRocket (0.3.1-beta2)
+  - TheAmazingAudioEngine (1.4.2)
 
 DEPENDENCIES:
   - MZFayeClient (~> 1.0.0)
+  - TheAmazingAudioEngine
 
 SPEC CHECKSUMS:
   Base64: c6d74f31f150543b246a07e180ba813c88e59311
   MZFayeClient: 0db6ba1b0408ff4e26f1bbe31d06ee6934f036b6
   SocketRocket: 79a68ae186063c65e1fe6f638b1ae2927aa5f304
+  TheAmazingAudioEngine: d5a503ad7455329eb4877cfb57acd32498ef12c9
 
 COCOAPODS: 0.33.1
