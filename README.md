@@ -6,6 +6,6 @@ Live monitoring of @TwitterBoston's showers in L6
 ##TODO
 - Persistance. Sorry, what did you say again?  
 - ~~Websockets, instead of a ajax polling every 5 seconds~~
-- Client: Support last time
 - iOS: Timer only on current view
-- Hide red timer
+- ~~Hide red timer~~
+- Flush sound
