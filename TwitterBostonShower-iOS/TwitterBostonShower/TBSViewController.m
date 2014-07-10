@@ -40,6 +40,8 @@
     [client subscribeToChannel:@"/showers" usingBlock:^(NSDictionary *message) {
         if ([message isKindOfClass:[NSDictionary class]]) {
             messageDict = message;
+            
+            
             [self updateFromServer];
         }
     }];
@@ -49,30 +51,26 @@
     secondsToWait = 10;
     
     // This count is used to make sure that we get 5 continious readings > 0.5 before triggering an action
-    __block int i = 0;
+    __block int yRotationCount = 0;
     motionManager = [[CMMotionManager alloc] init];
     [motionManager startDeviceMotionUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMDeviceMotion *motion, NSError *error) {
         // If RR.y is > 0.5, we'll detect that as a door open/close
         if (yRotationFlag && fabsf(motion.rotationRate.y) > 0.5) {
-            if (i <= 5) {
-                i++;
+            if (yRotationCount <= 5) {
+                yRotationCount++;
                 return;
             }
-            i = 0;
+            yRotationCount = 0;
             dispatch_async(dispatch_get_main_queue(), ^{
-                yRotationFlag = NO;
-                [yRotationTimer invalidate];
-                yRotationTimer = [NSTimer scheduledTimerWithTimeInterval:secondsToWait target:self selector:@selector(resetYRotationBlock) userInfo:nil repeats:NO];
-                
-                [self toggleLockStatus];
+                [self toggleLock];
             });
         } else {
-            i = 0;
+            yRotationCount = 0;
         }
     }];
 }
 
-- (void)resetYRotationBlock {
+- (void)resetDisabledYRotation {
     [yRotationTimer invalidate];
     yRotationFlag = YES;
 }
@@ -80,22 +78,18 @@
 -(void)decrementCountdown {
     countdownTimerValue--;
     if (countdownTimerValue == 0) {
-        [self resetSeconds];
+        [countdownTimer invalidate];
+        countdownTimerLabel.text = @"";
     } else {
         countdownTimerLabel.text = [NSString stringWithFormat:@"%d",countdownTimerValue];
     }
-}
-
-- (void)resetSeconds {
-    [countdownTimer invalidate];
-    countdownTimerLabel.text = @"";
 }
 
 - (IBAction)segmentValueChanged:(id)sender {
     [countdownTimer invalidate];
     countdownTimerLabel.text = @"";
     
-    [self updateBoxView];
+    [self updateLockStatusView];
 }
 
 - (void)updateFromServer {
@@ -105,10 +99,10 @@
     [countdownTimer invalidate];
     countdownTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(decrementCountdown) userInfo:nil repeats:YES];
     
-    [self updateBoxView];
+    [self updateLockStatusView];
 }
 
-- (void)updateBoxView {
+- (void)updateLockStatusView {
     NSArray* arr;
     if (segmentControl.selectedSegmentIndex == 0) {
         arr = messageDict[@"left"];
@@ -123,7 +117,12 @@
     }
 }
 
-- (void)toggleLockStatus {
+- (void)toggleLock {
+    // When we toggle, we want to disable another lock for 10 seconds
+    yRotationFlag = NO;
+    [yRotationTimer invalidate];
+    yRotationTimer = [NSTimer scheduledTimerWithTimeInterval:secondsToWait target:self selector:@selector(resetDisabledYRotation) userInfo:nil repeats:NO];
+    
     NSString* door;
     NSString* status;
     if (segmentControl.selectedSegmentIndex == 0) {
@@ -150,7 +149,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [self toggleLockStatus];
+        [self toggleLock];
     }
 }
 
