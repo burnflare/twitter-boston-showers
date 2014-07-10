@@ -111,12 +111,12 @@ client.subscribe('/showers', function(message) {
 	if (leftBox != lastLeft.status) {
 		leftBox = lastLeft.status;
 		setBox("left", left);
-		startLeft(lastLeft.time);
+		startLeft(lastLeft.time, lastLeft.status);
 	}
 	if(rightBox != lastRight.status) {
 		rightBox = lastRight.status;
 		setBox("right", right);
-		startRight(lastRight.time);
+		startRight(lastRight.time, lastRight.status);
 	}
 });
 
@@ -131,7 +131,11 @@ function setBox(box, arr) {
 }
 
 var leftCounter;
-function startLeft(boxTime) {
+function startLeft(boxTime, status) {
+	if (status == "lock") {
+		$("#left-timer").html("used");
+		return;
+	}
 	var count = Math.floor(new Date() / 1000) - boxTime;
 	
 	function left() {
@@ -150,7 +154,11 @@ function startLeft(boxTime) {
 }
 
 var rightCounter;
-function startRight(boxTime) {
+function startRight(boxTime, status) {
+	if (status == "lock") {
+		$("#left-timer").html("used");
+		return;
+	}
 	var count = Math.floor(new Date() / 1000) - boxTime;
 	
 	function right() {
