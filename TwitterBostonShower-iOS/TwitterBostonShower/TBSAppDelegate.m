@@ -7,11 +7,13 @@
 //
 
 #import "TBSAppDelegate.h"
+#import <Crashlytics/Crashlytics.h>
 
 @implementation TBSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Crashlytics startWithAPIKey:@"90490a2f0b74ebf1d481d041cc258f822a80eb12"];
     // Override point for customization after application launch.
     return YES;
 }

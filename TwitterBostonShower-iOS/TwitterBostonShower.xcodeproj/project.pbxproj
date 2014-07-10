@@ -22,6 +22,7 @@
 		72096C1B196D88BF00F204B9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 72096C19196D88BF00F204B9 /* InfoPlist.strings */; };
 		72096C1D196D88BF00F204B9 /* TwitterBostonShowerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 72096C1C196D88BF00F204B9 /* TwitterBostonShowerTests.m */; };
 		727C6E55196ED78300039060 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 727C6E54196ED78300039060 /* CoreMotion.framework */; };
+		72FBAE90196F39DE00E516CB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FBAE8F196F39DE00E516CB /* Crashlytics.framework */; };
 		DA203C15C7864DC8B7022602 /* libPods-TwitterBostonShower.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11679D9EB4884918975B9958 /* libPods-TwitterBostonShower.a */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		72096C1A196D88BF00F204B9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		72096C1C196D88BF00F204B9 /* TwitterBostonShowerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwitterBostonShowerTests.m; sourceTree = "<group>"; };
 		727C6E54196ED78300039060 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		72FBAE8F196F39DE00E516CB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		9F486455FE7D42F1B59F6789 /* Pods-TwitterBostonShower.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterBostonShower.xcconfig"; path = "Pods/Pods-TwitterBostonShower.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				72096BF4196D88BF00F204B9 /* CoreGraphics.framework in Frameworks */,
 				72096BF6196D88BF00F204B9 /* UIKit.framework in Frameworks */,
 				72096BF2196D88BF00F204B9 /* Foundation.framework in Frameworks */,
+				72FBAE90196F39DE00E516CB /* Crashlytics.framework in Frameworks */,
 				DA203C15C7864DC8B7022602 /* libPods-TwitterBostonShower.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,6 +112,7 @@
 		72096BF0196D88BF00F204B9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				72FBAE8F196F39DE00E516CB /* Crashlytics.framework */,
 				727C6E54196ED78300039060 /* CoreMotion.framework */,
 				72096BF1196D88BF00F204B9 /* Foundation.framework */,
 				72096BF3196D88BF00F204B9 /* CoreGraphics.framework */,
@@ -174,6 +178,7 @@
 				72096BEB196D88BF00F204B9 /* Frameworks */,
 				72096BEC196D88BF00F204B9 /* Resources */,
 				D74AE5C2E3CB4B2881B91292 /* Copy Pods Resources */,
+				72FBAE8E196F39CD00E516CB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -275,6 +280,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		72FBAE8E196F39CD00E516CB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 90490a2f0b74ebf1d481d041cc258f822a80eb12 60e33a77fa7e26f15cdd12047a8e190c83ec7f44d6e8f33311a3974f39817c27";
 		};
 		D74AE5C2E3CB4B2881B91292 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -428,6 +446,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TwitterBostonShower/TwitterBostonShower-Prefix.pch";
 				INFOPLIST_FILE = "TwitterBostonShower/TwitterBostonShower-Info.plist";
@@ -445,6 +467,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TwitterBostonShower/TwitterBostonShower-Prefix.pch";
 				INFOPLIST_FILE = "TwitterBostonShower/TwitterBostonShower-Info.plist";
