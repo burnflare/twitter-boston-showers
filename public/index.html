@@ -135,22 +135,23 @@ function startLeft(boxTime, status) {
 	if (status == "lock") {
 		$("#left-timer").html("used");
 		return;
-	}
-	var count = Math.floor(new Date() / 1000) - boxTime;
+	} else {
+		var count = Math.floor(new Date() / 1000) - boxTime;
 	
-	function left() {
-		var minutes = Math.floor(count / 60);
-		var seconds = normalize(count - (minutes * 60));
-		("0" + seconds).slice(-2);
-		var stopwatch = minutes + ":" + seconds;
-		$("#left-timer").html( stopwatch )
+		function left() {
+			var minutes = Math.floor(count / 60);
+			var seconds = normalize(count - (minutes * 60));
+			("0" + seconds).slice(-2);
+			var stopwatch = minutes + ":" + seconds;
+			$("#left-timer").html( stopwatch )
 		
-		count++;
-	}
+			count++;
+		}
 	
-	clearInterval(leftCounter);
-	leftCounter = setInterval(function() {left()}, 1000);
-	left();
+		clearInterval(leftCounter);
+		leftCounter = setInterval(function() {left()}, 1000);
+		left();
+	}
 }
 
 var rightCounter;
@@ -158,22 +159,23 @@ function startRight(boxTime, status) {
 	if (status == "lock") {
 		$("#left-timer").html("used");
 		return;
-	}
-	var count = Math.floor(new Date() / 1000) - boxTime;
+	} else {
+		var count = Math.floor(new Date() / 1000) - boxTime;
 	
-	function right() {
-		var minutes = Math.floor(count / 60);
-		var seconds = normalize(count - (minutes * 60));
-		("0" + seconds).slice(-2);
-		var stopwatch = minutes + ":" + seconds;
-		$("#right-timer").html( stopwatch )
+		function right() {
+			var minutes = Math.floor(count / 60);
+			var seconds = normalize(count - (minutes * 60));
+			("0" + seconds).slice(-2);
+			var stopwatch = minutes + ":" + seconds;
+			$("#right-timer").html( stopwatch )
 		
-		count++;
-	}
+			count++;
+		}
 	
-	clearInterval(rightCounter);
-	rightCounter = setInterval(function() {right()}, 1000);
-	right();
+		clearInterval(rightCounter);
+		rightCounter = setInterval(function() {right()}, 1000);
+		right();
+	}
 }
 
 function normalize(n){
