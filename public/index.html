@@ -133,7 +133,7 @@ function setBox(box, arr) {
 var leftCounter;
 function startLeft(boxTime, status) {
 	if (status == "lock") {
-		$("#left-timer").html("used");
+		$("#left-timer").html("USED");
 		return;
 	} else {
 		var count = Math.floor(new Date() / 1000) - boxTime;
@@ -157,7 +157,7 @@ function startLeft(boxTime, status) {
 var rightCounter;
 function startRight(boxTime, status) {
 	if (status == "lock") {
-		$("#left-timer").html("used");
+		$("#right-timer").html("USED");
 		return;
 	} else {
 		var count = Math.floor(new Date() / 1000) - boxTime;
