@@ -16,17 +16,18 @@
 
 @implementation TBSViewController {
     MZFayeClient *client;
-    __weak IBOutlet UIView *statusView;
+    __weak IBOutlet UIView *lockStatusView;
     __weak IBOutlet UISegmentedControl *segmentControl;
-    __weak IBOutlet UILabel *numberLabel;
+    __weak IBOutlet UILabel *countdownTimerLabel;
     
-    CMMotionManager* mm;
-    NSTimer *rotationTimer;
+    CMMotionManager* motionManager;
+    NSTimer *yRotationTimer;
     BOOL yRotationFlag;
     
     int secondsToWait;
-    int secondsTimerVal;
-    NSTimer *secondsTimer;
+    
+    int countdownTimerValue;
+    NSTimer *countdownTimer;
     
     NSDictionary *messageDict;
 }
@@ -39,7 +40,7 @@
     [client subscribeToChannel:@"/showers" usingBlock:^(NSDictionary *message) {
         if ([message isKindOfClass:[NSDictionary class]]) {
             messageDict = message;
-            [self lockStatusChanged];
+            [self updateFromServer];
         }
     }];
     [client connect];
@@ -47,53 +48,53 @@
     yRotationFlag = YES;
     secondsToWait = 10;
     
-    mm = [[CMMotionManager alloc] init];
-    
-    [mm startDeviceMotionUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMDeviceMotion *motion, NSError *error) {
+    motionManager = [[CMMotionManager alloc] init];
+    [motionManager startDeviceMotionUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMDeviceMotion *motion, NSError *error) {
+        // If RR.y is > 0.5, we'll detect that as a door open/close
         if (yRotationFlag && fabsf(motion.rotationRate.y) > 0.5) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 yRotationFlag = NO;
-                [rotationTimer invalidate];
-                rotationTimer = [NSTimer scheduledTimerWithTimeInterval:secondsToWait target:self selector:@selector(resetRotation) userInfo:nil repeats:NO];
+                [yRotationTimer invalidate];
+                yRotationTimer = [NSTimer scheduledTimerWithTimeInterval:secondsToWait target:self selector:@selector(resetYRotationBlock) userInfo:nil repeats:NO];
                 
-                [self toggleStatus];
+                [self toggleLockStatus];
             });
         }
     }];
 }
 
-- (void)resetRotation {
-    [rotationTimer invalidate];
+- (void)resetYRotationBlock {
+    [yRotationTimer invalidate];
     yRotationFlag = YES;
 }
 
--(void)updateSeconds {
-    secondsTimerVal--;
-    if (secondsTimerVal == 0) {
+-(void)decrementCountdown {
+    countdownTimerValue--;
+    if (countdownTimerValue == 0) {
         [self resetSeconds];
     } else {
-        numberLabel.text = [NSString stringWithFormat:@"%d",secondsTimerVal];
+        countdownTimerLabel.text = [NSString stringWithFormat:@"%d",countdownTimerValue];
     }
 }
 
 - (void)resetSeconds {
-    [secondsTimer invalidate];
-    numberLabel.text = @"";
+    [countdownTimer invalidate];
+    countdownTimerLabel.text = @"";
 }
 
 - (IBAction)segmentValueChanged:(id)sender {
-    [secondsTimer invalidate];
-    numberLabel.text = @"";
+    [countdownTimer invalidate];
+    countdownTimerLabel.text = @"";
     
     [self updateBoxView];
 }
 
-- (void)lockStatusChanged {
-    secondsTimerVal = secondsToWait;
-    numberLabel.text = [NSString stringWithFormat:@"%d",secondsTimerVal];
+- (void)updateFromServer {
+    countdownTimerValue = secondsToWait;
+    countdownTimerLabel.text = [NSString stringWithFormat:@"%d",countdownTimerValue];
     
-    [secondsTimer invalidate];
-    secondsTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateSeconds) userInfo:nil repeats:YES];
+    [countdownTimer invalidate];
+    countdownTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(decrementCountdown) userInfo:nil repeats:YES];
     
     [self updateBoxView];
 }
@@ -107,13 +108,13 @@
     }
     
     if ([arr.lastObject[@"status"] isEqualToString:@"lock"]) {
-        statusView.backgroundColor = [UIColor redColor];
+        lockStatusView.backgroundColor = [UIColor redColor];
     } else if ([arr.lastObject[@"status"] isEqualToString:@"unlock"]) {
-        statusView.backgroundColor = [UIColor greenColor];
+        lockStatusView.backgroundColor = [UIColor greenColor];
     }
 }
 
-- (void)toggleStatus {
+- (void)toggleLockStatus {
     NSString* door;
     NSString* status;
     if (segmentControl.selectedSegmentIndex == 0) {
@@ -121,9 +122,9 @@
     } else {
         door = @"right";
     }
-    if (statusView.backgroundColor == [UIColor redColor]) {
+    if (lockStatusView.backgroundColor == [UIColor redColor]) {
         status = @"unlock";
-    } else if(statusView.backgroundColor == [UIColor greenColor]) {
+    } else if(lockStatusView.backgroundColor == [UIColor greenColor]) {
         status = @"lock";
     }
     [client sendMessage:@{@"door": door, @"status": status} toChannel:@"/updates"];
@@ -140,7 +141,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [self toggleStatus];
+        [self toggleLockStatus];
     }
 }
 

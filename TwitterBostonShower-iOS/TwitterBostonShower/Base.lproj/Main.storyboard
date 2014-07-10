@@ -47,9 +47,9 @@
                         <color key="backgroundColor" red="0.33333333333333331" green="0.67450980392156867" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
-                        <outlet property="numberLabel" destination="ZiD-1P-S22" id="TFg-cJ-PvH"/>
+                        <outlet property="lockStatusView" destination="Fwl-wv-nbN" id="bTc-EX-ofz"/>
                         <outlet property="segmentControl" destination="TGV-fi-LHA" id="Asp-L5-98i"/>
-                        <outlet property="statusView" destination="Fwl-wv-nbN" id="8ZT-9h-GPQ"/>
+                        <outlet property="timeoutSecondsLabel" destination="ZiD-1P-S22" id="DcF-wJ-h5e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
