@@ -48,10 +48,17 @@
     yRotationFlag = YES;
     secondsToWait = 10;
     
+    // This count is used to make sure that we get 5 continious readings > 0.5 before triggering an action
+    __block int i = 0;
     motionManager = [[CMMotionManager alloc] init];
     [motionManager startDeviceMotionUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMDeviceMotion *motion, NSError *error) {
         // If RR.y is > 0.5, we'll detect that as a door open/close
         if (yRotationFlag && fabsf(motion.rotationRate.y) > 0.5) {
+            if (i <= 5) {
+                i++;
+                return;
+            }
+            i = 0;
             dispatch_async(dispatch_get_main_queue(), ^{
                 yRotationFlag = NO;
                 [yRotationTimer invalidate];
@@ -59,6 +66,8 @@
                 
                 [self toggleLockStatus];
             });
+        } else {
+            i = 0;
         }
     }];
 }
@@ -132,7 +141,7 @@
 
 - (IBAction)viewTapped:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Override!"
-                                                        message:@"Are you sure I am out of sync and you want me to toggle this shower's status?"
+                                                        message:@"This means that I am out of sync and you're trying to fix me. Is that correct?"
                                                        delegate:self
                                               cancelButtonTitle:@"Cancel"
                                               otherButtonTitles:@"Yes", nil];
@@ -143,12 +152,6 @@
     if (buttonIndex == 1) {
         [self toggleLockStatus];
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
