@@ -133,6 +133,7 @@ function setBox(box, arr) {
 var leftCounter;
 function startLeft(boxTime, status) {
 	if (status == "lock") {
+		clearInterval(leftCounter);
 		$("#left-timer").html("USED");
 		return;
 	} else {
@@ -157,6 +158,7 @@ function startLeft(boxTime, status) {
 var rightCounter;
 function startRight(boxTime, status) {
 	if (status == "lock") {
+		clearInterval(rightCounter);
 		$("#right-timer").html("USED");
 		return;
 	} else {
