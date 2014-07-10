@@ -8,6 +8,7 @@
 
 #import "TBSViewController.h"
 #import "MZFayeClient.h"
+#import <CoreMotion/CoreMotion.h>
 
 @interface TBSViewController ()
 
@@ -17,46 +18,102 @@
     MZFayeClient *client;
     __weak IBOutlet UIView *statusView;
     __weak IBOutlet UISegmentedControl *segmentControl;
+    __weak IBOutlet UILabel *numberLabel;
+    
+    CMMotionManager* mm;
+    NSTimer *rotationTimer;
+    BOOL yRotationFlag;
+    
+    int secondsToWait;
+    int secondsTimerVal;
+    NSTimer *secondsTimer;
     
     NSDictionary *messageDict;
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewDidAppear:animated];
+    [super viewDidLoad];
     
     client = [[MZFayeClient alloc] initWithURL:[NSURL URLWithString:@"http://yo.vishnuprem.com/faye"]];
-    
-    [client connect];
-    
     [client subscribeToChannel:@"/showers" usingBlock:^(NSDictionary *message) {
         if ([message isKindOfClass:[NSDictionary class]]) {
             messageDict = message;
-            [self updateViews:nil];
+            [self lockStatusChanged];
+        }
+    }];
+    [client connect];
+    
+    yRotationFlag = YES;
+    secondsToWait = 10;
+    
+    mm = [[CMMotionManager alloc] init];
+    
+    [mm startDeviceMotionUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMDeviceMotion *motion, NSError *error) {
+        if (yRotationFlag && fabsf(motion.rotationRate.y) > 0.5) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                yRotationFlag = NO;
+                [rotationTimer invalidate];
+                rotationTimer = [NSTimer scheduledTimerWithTimeInterval:secondsToWait target:self selector:@selector(resetRotation) userInfo:nil repeats:NO];
+                
+                [self toggleStatus];
+            });
         }
     }];
 }
 
-- (IBAction)updateViews:(id)sender {
-    NSArray* left = messageDict[@"left"];
-    NSArray* right = messageDict[@"right"];
-    
-    if (segmentControl.selectedSegmentIndex == 0) {
-        [self colorViewWithStatus:left.lastObject[@"status"]];
+- (void)resetRotation {
+    [rotationTimer invalidate];
+    yRotationFlag = YES;
+}
+
+-(void)updateSeconds {
+    secondsTimerVal--;
+    if (secondsTimerVal == 0) {
+        [self resetSeconds];
     } else {
-        [self colorViewWithStatus:right.lastObject[@"status"]];
+        numberLabel.text = [NSString stringWithFormat:@"%d",secondsTimerVal];
     }
 }
 
-- (void)colorViewWithStatus:(NSString*)status {
-    if ([status isEqualToString:@"lock"]) {
+- (void)resetSeconds {
+    [secondsTimer invalidate];
+    numberLabel.text = @"";
+}
+
+- (IBAction)segmentValueChanged:(id)sender {
+    [secondsTimer invalidate];
+    numberLabel.text = @"";
+    
+    [self updateBoxView];
+}
+
+- (void)lockStatusChanged {
+    secondsTimerVal = secondsToWait;
+    numberLabel.text = [NSString stringWithFormat:@"%d",secondsTimerVal];
+    
+    [secondsTimer invalidate];
+    secondsTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateSeconds) userInfo:nil repeats:YES];
+    
+    [self updateBoxView];
+}
+
+- (void)updateBoxView {
+    NSArray* arr;
+    if (segmentControl.selectedSegmentIndex == 0) {
+        arr = messageDict[@"left"];
+    } else {
+        arr = messageDict[@"right"];
+    }
+    
+    if ([arr.lastObject[@"status"] isEqualToString:@"lock"]) {
         statusView.backgroundColor = [UIColor redColor];
-    } else if ([status isEqualToString:@"unlock"]) {
+    } else if ([arr.lastObject[@"status"] isEqualToString:@"unlock"]) {
         statusView.backgroundColor = [UIColor greenColor];
     }
 }
 
-- (IBAction)viewTapped:(id)sender {
+- (void)toggleStatus {
     NSString* door;
     NSString* status;
     if (segmentControl.selectedSegmentIndex == 0) {
@@ -70,6 +127,21 @@
         status = @"lock";
     }
     [client sendMessage:@{@"door": door, @"status": status} toChannel:@"/updates"];
+}
+
+- (IBAction)viewTapped:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Override!"
+                                                        message:@"Are you sure I am out of sync and you want me to toggle this shower's status?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Yes", nil];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [self toggleStatus];
+    }
 }
 
 - (void)didReceiveMemoryWarning

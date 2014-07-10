@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TBSViewController : UIViewController
+@interface TBSViewController : UIViewController <UIAlertViewDelegate>
 
 @end

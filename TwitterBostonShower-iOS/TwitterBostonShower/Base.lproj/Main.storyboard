@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6185.7" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <deployment defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6181.2"/>
     </dependencies>
     <scenes>
@@ -23,12 +22,21 @@
                                     <segment title="#shower 613"/>
                                     <segment title="#shower 612"/>
                                 </segments>
+                                <color key="tintColor" red="1" green="0.80000000000000004" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
-                                    <action selector="updateViews:" destination="vXZ-lx-hvc" eventType="valueChanged" id="mx0-SN-8T0"/>
+                                    <action selector="segmentValueChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="i5l-5d-b4L"/>
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fwl-wv-nbN">
                                 <rect key="frame" x="0.0" y="67" width="320" height="400"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZiD-1P-S22">
+                                        <rect key="frame" x="20" y="20" width="280" height="360"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="170"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -36,9 +44,10 @@
                                 </connections>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.33333333333333331" green="0.67450980392156867" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
+                        <outlet property="numberLabel" destination="ZiD-1P-S22" id="TFg-cJ-PvH"/>
                         <outlet property="segmentControl" destination="TGV-fi-LHA" id="Asp-L5-98i"/>
                         <outlet property="statusView" destination="Fwl-wv-nbN" id="8ZT-9h-GPQ"/>
                     </connections>
