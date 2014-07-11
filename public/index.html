@@ -137,6 +137,9 @@ function startLeft(boxTime, status) {
 		$("#left-timer").html("USED");
 		return;
 	} else {
+		if ($_GET('flush') == '1') {
+			audio.play();
+		}
 		var count = Math.floor(new Date() / 1000) - boxTime;
 	
 		function left() {
@@ -162,6 +165,9 @@ function startRight(boxTime, status) {
 		$("#right-timer").html("USED");
 		return;
 	} else {
+		if ($_GET('flush') == '1') {
+			audio.play();
+		}
 		var count = Math.floor(new Date() / 1000) - boxTime;
 	
 		function right() {
@@ -182,6 +188,12 @@ function startRight(boxTime, status) {
 
 function normalize(n){
     return n > 9 ? "" + n: "0" + n;
+}
+
+function $_GET(q,s) { 
+	s = s ? s : window.location.search; 
+	var re = new RegExp('&'+q+'(?:=([^&]*))?(?=&|$)','i'); 
+	return (s=s.replace(/^?/,'&').match(re)) ? (typeof s[1] == 'undefined' ? '' : decodeURIComponent(s[1])) : undefined; 
 }
 
 </script>
