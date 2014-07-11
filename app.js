@@ -123,7 +123,7 @@ stream.on('tweet', function (tweet) {
 function prettyTextForDoor(doorArr){
 	var last = doorArr[doorArr.length -1];
 	if (last.status == 'lock') {
-		return 'currently in use';
+		return 'currently IN USE';
 	} else {
 		return 'currently free';
 	}

@@ -136,7 +136,7 @@ var leftCounter;
 function startLeft(boxTime, status) {
 	if (status == "lock") {
 		clearInterval(leftCounter);
-		$("#left-timer").html("USED");
+		$("#left-timer").html("IN USE");
 		return;
 	} else {
 		if (getUrlVars()['flush'] == '1' && afterFirst == true) {
@@ -164,7 +164,7 @@ var rightCounter;
 function startRight(boxTime, status) {
 	if (status == "lock") {
 		clearInterval(rightCounter);
-		$("#right-timer").html("USED");
+		$("#right-timer").html("IN USE");
 		return;
 	} else {
 		if (getUrlVars()['flush'] == '1' && afterFirst == true) {
