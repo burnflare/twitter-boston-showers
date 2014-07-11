@@ -139,9 +139,9 @@ function startLeft(boxTime, status) {
 		$("#left-timer").html("USED");
 		return;
 	} else {
-		// if ($_GET('flush') == '1') {
-		// 	audio.play();
-		// }
+		if (getUrlVars()['flush'] == '1' && afterFirst == true) {
+			audio.play();
+		}
 		var count = Math.floor(new Date() / 1000) - boxTime;
 	
 		function left() {
@@ -167,7 +167,7 @@ function startRight(boxTime, status) {
 		$("#right-timer").html("USED");
 		return;
 	} else {
-		if (getUrlVars()['flush'] == '1' && afterFirst) {
+		if (getUrlVars()['flush'] == '1' && afterFirst == true) {
 			audio.play();
 		}
 		var count = Math.floor(new Date() / 1000) - boxTime;
