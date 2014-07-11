@@ -112,7 +112,7 @@ stream.on('tweet', function (tweet) {
 	var name = user.name;
 	var screenName = user.screen_name;
 	
-	var message = '@' + screenName + ' Yo ' + name + '.\n#shower613 is ' + prettyTextForDoor(leftArr) + '.\n#shower612 is ' + prettyTextForDoor(rightArr) + '.\n\nYoyo peace out.';
+	var message = '@' + screenName + ' Yo ' + name + '.\n#shower613 is ' + prettyTextForDoor(leftArr) + '.\n#shower612 is ' + prettyTextForDoor(rightArr) + '.\n\n#hackweek. Yo.';
 	T.post('statuses/update', { status: message }, function(err, data, response) {
 		if (err) {
 			console.log(err);
