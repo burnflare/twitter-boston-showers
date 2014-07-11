@@ -94,3 +94,38 @@ bayeux.attach(server);
 server.listen(port, function () {
    console.log('Express server started on port %s', server.address().port);
 });
+
+
+var Twit = require('twit')
+
+var T = new Twit({
+    consumer_key:         'yLivYL28pkA0EuaGkKb9FkCuL'
+  , consumer_secret:      'o64J1pV87pPIJidW2wIX66RPEGQmUOCQAfOQ9lZs5qY200P3uc'
+  , access_token:         '2616504360-l3KjzCWgDIdbGrV0la6Ne5hLD9SJot6ntBMYkl2'
+  , access_token_secret:  '1KiR6ILB2oUXpsO9FZqjlIKG5q3KQM13ffvW3Tj5kR00Q'
+})
+
+var stream = T.stream('statuses/filter', { track: '@bosshower' , replies: 'all'})
+
+stream.on('tweet', function (tweet) {
+	var user = tweet.user;
+	var name = user.name;
+	var screenName = user.screen_name;
+	
+	var message = '@' + screenName + ' Yo ' + name + '.\n#shower613 is ' + prettyTextForDoor(leftArr) + '.\n#shower612 is ' + prettyTextForDoor(rightArr) + '.\n\nYoyo peace out.';
+	T.post('statuses/update', { status: message }, function(err, data, response) {
+		if (err) {
+			console.log(err);
+		}
+	})
+})
+
+function prettyTextForDoor(doorArr){
+	var last = doorArr[doorArr.length -1];
+	if (last.status == 'lock') {
+		return 'currently in use';
+	} else {
+		return 'currently free';
+	}
+}
+
